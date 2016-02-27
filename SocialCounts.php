@@ -12,10 +12,13 @@ class SocialCounts extends \cmsgears\core\common\base\Widget {
 
 	// Public Variables --------------------
 	
-	public $linkFacebook		= null;
-	public $linkTwitter			= null;
-	public $linkPinterest		= null;
-	public $template			= 'simple';
+	public $attributes          = null;
+    public $template            = 'simple';
+    
+	private $linkFacebook		= null;
+	private $linkTwitter		= null;
+	private $linkPinterest		= null;
+	
 	
 	private $facebookLikes		= 0;
 	private $twitterFollowers	= 0;
@@ -37,7 +40,12 @@ class SocialCounts extends \cmsgears\core\common\base\Widget {
 	// yii\base\Widget
 	
     public function run() {
-
+        
+        if( $this->attributes != null ) {
+        
+            $this->initLinks( $this->attributes );
+        }    
+        
 		if( $this->linkFacebook != null ) {
 					
 			$this->facebookLikes	= $this->getFacebookLikes( $this->linkFacebook );
@@ -69,6 +77,30 @@ class SocialCounts extends \cmsgears\core\common\base\Widget {
 		return $widgetHtml;
 	}
 	
+    protected function initLinks( $attributes ) {
+        
+        foreach( $attributes as $settingAttr ) {
+        
+            foreach( $settingAttr as $link ) {
+                
+                if ( strpos( $link->address, 'www.facebook.com' ) !== false ) {
+                    
+                    $this->linkFacebook   = $link->address;
+                }
+                
+                if ( strpos( $link->address, 'www.twitter.com' ) !== false ) {
+                    
+                    $this->linkTwitter    = $link->address;
+                }
+                
+                if ( $link->icon    == "cmti-social-pinterest" ) {
+                    
+                   $this->linkPinterest  = $link->address;
+                }
+            }
+        }
+    }
+    
 	protected function getFacebookLikes( $link ) {
 		
 		// Query in FQL
