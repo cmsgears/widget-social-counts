@@ -104,7 +104,7 @@ class SocialCounts extends \cmsgears\core\common\base\Widget {
 	    $response 	= json_decode( file_get_contents( $fqlURL ) );
 		$likes		= 0;
 
-		if( isset( $response ) && !empty( $response ) ) {
+		if( isset( $response ) && !empty( $response ) && is_array( $response ) ) {
 
 			$likes	= $response[ 0 ]->like_count;
 		}
